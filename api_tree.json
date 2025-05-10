@@ -1,0 +1,65 @@
+{
+  "clients": {
+    "applications": {
+      "$client_application_id": {
+        "get": "GET /clients/applications/$client_application_id",
+        "approve": {
+          "POST": "POST /clients/applications/$client_application_id/approve"
+        },
+        "reject": {
+          "POST": "POST /clients/applications/$client_application_id/reject"
+        }
+      },
+      "get": "GET /clients/applications",
+      "new": " POST /clients/applications"
+    },
+    "$client_id": {
+      "apikeys": {
+        "$apikey_name": {
+          "get": "GET /clients/$client_id/apikeys/$apikey_name",
+          "delete": "DELETE /clients/$client_id/apikeys/$apikey_name"
+        },
+        "get": "GET /clients/$client_id/apikeys",
+        "new": "POST /clients/$client_id/apikeys"
+      },
+      "get": "GET /clients/$client_id",
+      "revoke": "POST /clients/$client_id/revoke",
+      "update": "PATCH /clients/$client_id",
+      "delete": "DELETE /clients/$client_id"
+    }
+  },
+  "emailotp": {
+    "request": "POST /emailotp/request",
+    "verify": "POST /emailotp/verify"
+  },
+  "users": {
+    "$user_id": {
+      "get": "GET /users/$user_id",
+      "update": "PATCH /users/$user_id",
+      "delete": "DELETE /users/$user_id",
+      "profile": {"GET": "users[id].profile.get"}
+    },
+    "me": "GET /users/me",
+    "new": "POST /users"
+  },
+  "circles": {
+    "$circle_selector": {
+      "get": "GET /circles/$circle_selector",
+      "reparent": "POST /circles/$circle_selector/reparent",
+      "members": {
+        "get": "GET /circles/$circle_selector/members",
+        "add": "POST /circles/$circle_selector/members/add",
+        "remove": "POST /circles/$circle_selector/members/remove"
+      },
+      "sources": {
+        "add": "POST /circles/$circle_selector/sources/add",
+        "remove": "POST /circles/$circle_selector/sources/remove",
+        "get": "GET /circles/$circle_selector/sources",
+        "$source_id": "GET /circles/$circle_selector/sources/$source_id"
+      },
+      "users": "GET /circles/$circle_selector/users"
+    },
+    "post": "POST /circles",
+    "me": "GET /circles/me"
+  }
+}
