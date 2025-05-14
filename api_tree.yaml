@@ -209,3 +209,62 @@ paths:
           schema:
             type: string
 
+components:
+  schemas:
+    Client:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the client.
+        name:
+          type: string
+          description: The name of the client.
+        description:
+          type: string
+          description: The description of the client.
+        created_at:
+          type: string
+          format: date-time
+          description: The creation date of the client.
+    ClientApplication:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the client application.
+        name:
+          type: string
+          description: The name of the client application.
+        description:
+          type: string
+          description: The description of the client application.
+        owner:
+          type: string
+          format: email
+          description: The email of the client application owner.
+        status:
+          type: string
+          enum: [review, approved, rejected, retracted]
+          description: The status of the client application.
+        created_at:
+          type: string
+          format: date-time
+          description: The creation date of the client application.
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the user.
+        name:
+          type: string
+          description: The name of the user.
+        email:
+          type: string
+          format: email
+          description: The email of the user.
+        activated_at:
+          type: string
+          format: date-time
+          description: The activation date of the user.
