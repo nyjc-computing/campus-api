@@ -13,20 +13,10 @@ paths:
     summary: Represents a single client.
     get:
       parameters:
-        - in: path
-          name: client_id
-          required: true
-          description: The ID of the client to retrieve.
-          schema:
-            type: string
+        $ref: '#/components/parameters/client_id'
     patch:
       parameters:
-        - in: path
-          name: client_id
-          required: true
-          description: The ID of the client to retrieve.
-          schema:
-            type: string
+        $ref: '#/components/parameters/client_id'
       requestBody:
         description: Key-value pairs of client properties to update.
         required: true
@@ -38,22 +28,12 @@ paths:
                 type: string
     delete:
       parameters:
-        - in: path
-          name: client_id
-          required: true
-          description: The ID of the client to retrieve.
-          schema:
-            type: string
+        $ref: '#/components/parameters/client_id'
   /clients/{client_id}/replace:
     summary: Revoke and reissue a client secret.
     put:
       parameters:
-        - in: path
-          name: client_id
-          required: true
-          description: The ID of the client to retrieve.
-          schema:
-            type: string
+        $ref: '#/components/parameters/client_id'
   /emailotp/request:
     summary: Request an email OTP.
     post:
@@ -87,20 +67,12 @@ paths:
     summary: Represents a single user.
     get:
       parameters:
-        - in: path
-          name: user_id
-          required: true
-          description: The User ID
-          schema:
-            type: string
+        $ref: '#/components/parameters/user_id'
+      
     patch:
       parameters:
-        - in: path
-          name: user_id
-          required: true
-          description: The User ID
-          schema:
-            type: string
+        $ref: '#/components/parameters/user_id'
+      
       requestBody:
         required: true
         content:
@@ -111,12 +83,7 @@ paths:
                 type: string
     delete:
       parameters:
-        - in: path
-          name: user_id
-          required: true
-          description: The User ID
-          schema:
-            type: string
+        $ref: '#/components/parameters/user_id'
 
 components:
   schemas:
@@ -125,6 +92,7 @@ components:
       properties:
         id:
           type: string
+          readOnly: true
           description: The ID of the client.
         name:
           type: string
@@ -135,6 +103,7 @@ components:
         created_at:
           type: string
           format: date-time
+          readOnly: true
           description: The creation date of the client.
         # Note that secret_hash is never returned in the response
         # It is only returned in a /replace request
@@ -143,6 +112,7 @@ components:
       properties:
         id:
           type: string
+          readOnly: true
           description: The ID of the user.
         name:
           type: string
@@ -153,6 +123,7 @@ components:
           description: The email of the user.
         activated_at:
           type: string
+          readOnly: true
           format: date-time
           description: The activation date of the user.
     user_id:
@@ -217,3 +188,19 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/otp'
+
+  requestBody:
+    client:
+      description: The client object to create or update.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Client'
+    user:
+      description: The user object to create or update.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
