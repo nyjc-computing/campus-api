@@ -11,7 +11,6 @@ paths:
     get:
       responses:
         '200':
-          description: Clients found
           content:
             application/json:
               schema:
@@ -36,7 +35,6 @@ paths:
         $ref: '#/components/parameters/client_id'
       responses:
         '200':
-          description: Client found
           content:
             application/json:
               schema:
@@ -109,7 +107,6 @@ paths:
         $ref: '#/components/parameters/user_id'
       responses:
         '200':
-          description: User found
           content:
             application/json:
               schema:
