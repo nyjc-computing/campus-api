@@ -15,6 +15,8 @@ BasicType = Literal[
     "object"
 ]
 
+
+
 class Schema(ABC):
     """Base class for all schemas.
 
@@ -27,9 +29,12 @@ class Schema(ABC):
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self.value})"
     
-    def to_dict(self) -> dict:
+    @abstractmethod
+    def to_json(self) -> dict:
         """Convert the schema to a json dictionary."""
-        raise NotImplementedError("Subclasses must implement to_dict() method.")
+        pass
+
+
 
 # Basic types
 
@@ -40,36 +45,43 @@ class BasicSchema(Schema):
     def __init__(self, value: BasicType):
         super().__init__(value)
 
-    def to_dict(self) -> dict:
+    def to_json(self) -> dict:
         if hasattr(self, "format") and self.format is not None:
             return {"type": self.type, "format": self.format}
         else:
             return {"type": self.type}
 
-class String(Schema):
+
+class String(BasicSchema):
     type: BasicType = "string"
     format: str | None = None
 
-class Number(Schema):
+
+class Number(BasicSchema):
     type: BasicType = "number"
     format: str | None = None
 
-class Integer(Schema):
+
+class Integer(BasicSchema):
     type: BasicType = "integer"
     format: str | None = None
 
-class Boolean(Schema):
+
+class Boolean(BasicSchema):
     type: BasicType = "boolean"
+
 
 class Array(Schema):
     type: BasicType = "array"
     
     # TODO
 
+
 class Object(Schema):
     type: BasicType = "object"
 
     # TODO
+
 
 
 # String formats
@@ -82,6 +94,7 @@ class Byte(String):
     type: BasicType = "string"
     format: str = "byte"
 
+
 class Date(String):
     """Date format as defined in RFC 3339, section 5.6.
 
@@ -90,6 +103,7 @@ class Date(String):
     type: BasicType = "string"
     format: str = "date"
 
+
 class DateTime(String):
     """Date-time format as defined in RFC 3339, section 5.6.
 
@@ -97,6 +111,7 @@ class DateTime(String):
     """
     type: BasicType = "string"
     format: str = "date-time"
+
 
 class Email(String):
     """Email format as defined in RFC 5322.
