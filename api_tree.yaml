@@ -5,7 +5,7 @@ servers:
     description: Campus API (production)
 paths:
   /clients:
-    summary: All clients in the system.
+    summary: Represents all clients in the system.
     get:
     post:
   /clients/{client_id}:
@@ -17,7 +17,7 @@ paths:
     summary: Revoke and reissue a client secret.
     put:
   /clients/applications:
-    summary: Applications (requests for client id) in the system.
+    summary: Represents all applications (requests for client id) in the system.
     get:
     post:
   /clients/applications/{application_id}:
@@ -34,7 +34,7 @@ paths:
     summary: Cancel an application.
     put:
   /clients/applications/{application_id}/admins:
-    summary: All admins for a client.
+    summary: Represents all admins for a client.
     get:
   /clients/applications/{application_id}/admins/add:
     summary: Represents a single admin for a client.
@@ -49,7 +49,7 @@ paths:
     summary: Verify an email OTP.
     post:
   /users:
-    summary: All users in the system.
+    summary: Represents all users in the system.
     post:
   /users/{user_id}:
     summary: Represents a single user.
