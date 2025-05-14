@@ -54,97 +54,6 @@ paths:
           description: The ID of the client to retrieve.
           schema:
             type: string
-  /clients/applications:
-    summary: Represents all applications (requests for client id) in the system.
-    get:
-    post:
-  /clients/applications/{client_application_id}:
-    summary: Represents a single application.
-    get: 
-      parameters:
-        - in: path
-          name: client_application_id
-          required: true
-          description: The ID of the client application to retrieve.
-          schema:
-            type: string
-    delete: 
-      parameters:
-        - in: path
-          name: client_application_id
-          required: true
-          description: The ID of the client application to retrieve.
-          schema:
-            type: string
-  /clients/applications/{client_application_id}/approve:
-    summary: Approve an application.
-    put:
-      parameters:
-        - in: path
-          name: client_application_id
-          required: true
-          description: The ID of the client application to retrieve.
-          schema:
-            type: string
-  /clients/applications/{client_application_id}/reject:
-    summary: Reject an application.
-    put:
-      parameters:
-        - in: path
-          name: client_application_id
-          required: true
-          description: The ID of the client application to retrieve.
-          schema:
-            type: string
-  /clients/applications/{client_application_id}/cancel:
-    summary: Cancel an application.
-    put:
-      parameters:
-        - in: path
-          name: client_application_id
-          required: true
-          description: The ID of the client application to retrieve.
-          schema:
-            type: string
-  /clients/applications/{client_application_id}/admins:
-    summary: Represents all admins for a client.
-    get:
-      parameters:
-        - in: path
-          name: client_application_id
-          required: true
-          description: The ID of the client application to retrieve.
-          schema:
-            type: string
-  /clients/applications/{client_application_id}/admins/add:
-    summary: Adds an admin for a client.
-    post:
-      parameters:
-        - in: path
-          name: client_application_id
-          required: true
-          description: The ID of the client application to retrieve.
-          schema:
-            type: string
-      requestBody:
-        description: Admin info to add.
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties:
-                type: string
-  /clients/applications/{client_application_id}/admins/remove:
-    summary: Removes an admin for a client.
-    delete:
-      parameters:
-        - in: path
-          name: client_application_id
-          required: true
-          description: The ID of the client application to retrieve.
-          schema:
-            type: string
   /emailotp/request:
     summary: Request an email OTP.
     post:
@@ -227,30 +136,6 @@ components:
           type: string
           format: date-time
           description: The creation date of the client.
-    ClientApplication:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The ID of the client application.
-        name:
-          type: string
-          description: The name of the client application.
-        description:
-          type: string
-          description: The description of the client application.
-        owner:
-          type: string
-          format: email
-          description: The email of the client application owner.
-        status:
-          type: string
-          enum: [review, approved, rejected, retracted]
-          description: The status of the client application.
-        created_at:
-          type: string
-          format: date-time
-          description: The creation date of the client application.
     User:
       type: object
       properties:
@@ -268,3 +153,5 @@ components:
           type: string
           format: date-time
           description: The activation date of the user.
+
+  parameters:
