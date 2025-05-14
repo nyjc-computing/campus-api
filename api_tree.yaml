@@ -27,6 +27,15 @@ paths:
           description: The ID of the client to retrieve.
           schema:
             type: string
+      requestBody:
+        description: Key-value pairs of client properties to update.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
     delete:
       parameters:
         - in: path
@@ -117,6 +126,15 @@ paths:
           description: The ID of the client application to retrieve.
           schema:
             type: string
+      requestBody:
+        description: Admin info to add.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
   /clients/applications/{client_application_id}/admins/remove:
     summary: Removes an admin for a client.
     delete:
@@ -130,9 +148,29 @@ paths:
   /emailotp/request:
     summary: Request an email OTP.
     post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
   /emailotp/verify:
     summary: Verify an email OTP.
     post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                  pattern: otp
   /users:
     summary: Represents all users in the system.
     post:
@@ -154,6 +192,14 @@ paths:
           description: The User ID
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
     delete:
       parameters:
         - in: path
