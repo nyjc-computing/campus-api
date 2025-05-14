@@ -1,0 +1,58 @@
+servers:
+  - url: https://api.campus.nyjc.dev/v1
+    description: Campus API (development, staging)
+  - url: https://api.campus.nyjc.app/v1
+    description: Campus API (production)
+paths:
+  /clients:
+    summary: All clients in the system.
+    get:
+    post:
+  /clients/{client_id}:
+    summary: Represents a single client.
+    get:
+    patch:
+    delete:
+  /clients/{client_id}/replace:
+    summary: Revoke and reissue a client secret.
+    put:
+  /clients/applications:
+    summary: Applications (requests for client id) in the system.
+    get:
+    post:
+  /clients/applications/{application_id}:
+    summary: Represents a single application.
+    get: 
+    delete: 
+  /clients/applications/{application_id}/approve:
+    summary: Approve an application.
+    put:
+  /clients/applications/{application_id}/reject:
+    summary: Reject an application.
+    put:
+  /clients/applications/{application_id}/cancel:
+    summary: Cancel an application.
+    put:
+  /clients/applications/{application_id}/admins:
+    summary: All admins for a client.
+    get:
+  /clients/applications/{application_id}/admins/add:
+    summary: Represents a single admin for a client.
+    post:
+  /clients/applications/{application_id}/admins/remove:
+    summary: Represents a single admin for a client.
+    delete:
+  /emailotp/request:
+    summary: Request an email OTP.
+    post:
+  /emailotp/verify:
+    summary: Verify an email OTP.
+    post:
+  /users:
+    summary: All users in the system.
+    post:
+  /users/{user_id}:
+    summary: Represents a single user.
+    get:
+    patch:
+    delete:
