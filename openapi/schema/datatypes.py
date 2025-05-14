@@ -4,7 +4,10 @@ Data types as defined in the OpenAPI 3.0 Specification.
 https://swagger.io/docs/specification/v3_0/data-models/data-types/
 """
 from abc import ABC, abstractmethod
-from typing import Literal
+from typing import Literal, Mapping
+
+Mimetype = str
+Content = Mapping[Mimetype, "Schema"]
 
 BasicType = Literal[
     "string",
@@ -40,6 +43,7 @@ class Schema(ABC):
 
 class BasicSchema(Schema):
     """Base class for basic schemas."""
+    # type should be declared as a class variable
     type: BasicType
 
     def __init__(self, value: BasicType):
@@ -55,6 +59,7 @@ class BasicSchema(Schema):
 class String(BasicSchema):
     type: BasicType = "string"
     format: str | None = None
+    pattern: str | None = None
 
 
 class Number(BasicSchema):
@@ -121,3 +126,11 @@ class Email(String):
     type: BasicType = "string"
     format: str = "email"
 
+
+class Time(String):
+    """Time format as defined in RFC 3339, section 5.6.
+
+    Example: "12:00:00Z"
+    """
+    type: BasicType = "string"
+    format: str = "time"

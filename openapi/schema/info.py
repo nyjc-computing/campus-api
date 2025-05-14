@@ -77,7 +77,7 @@ class Info:
             version: str,
             description: str | None = None,
             termsOfService: Url | None = None,
-            externalDocs: ExternalDocsInfo | None = None
+            externalDocs: ExternalDocs | None = None
     ):
         self.title = title
         self.version = version

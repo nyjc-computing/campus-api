@@ -3,13 +3,15 @@
 Classes for representing API paths
 """
 
-from typing import Literal, Sequence
+from typing import Literal, Mapping, Sequence, get_args
 
-from . import info, response, server
+from .datatypes import Content, Schema
+from .info import ExternalDocs
 from .request import RequestBody
-from .response import Content, Mimetype, Response
+from .response import Response
+from .server import Server
 
-PathPattern: str
+PathPattern = str
 HttpMethod = Literal["get", "post", "patch", "put", "delete", "head", "options", "trace", "connect"]
 ParameterLocation = Literal["cookie", "header", "path", "query"]
 
@@ -22,7 +24,7 @@ class Parameter:
 
     https://swagger.io/docs/specification/v3.0/paths-and-operations/
     """
-    in: ParameterLocation
+    in_: ParameterLocation
     name: str
     summary: str | None = None
     description: str | None
@@ -32,23 +34,23 @@ class Parameter:
 
     def __init__(
             self,
-            in: ParameterLocation,
+            in_: ParameterLocation,
             name: str,
             summary: str | None = None,
             description: str | None = None,
             schema: Schema | None = None,
             content: Content | None = None,
-            required: bool | None,
+            required: bool | None = None,
     ):
         if schema and content:
             raise ValueError("Specify schema or content, not both")
-        if in == "path" and not required:
+        if in_ == "path" and not required:
             raise ValueError("Path parameters must have `required: true`")
         if schema.default is not None and required:
-            raie ValueError("Schema default value will never be used as parameter value is required")
+            raise ValueError("Schema default value will never be used as parameter value is required")
         if content:
             raise NotImplementedError("This version of the OpenAPI 3.0 spec does not support `content` parameters yet.")
-        self.in = in
+        self.in_ = in_
         self.name = name
         self.summary = summary
         self.description = description
@@ -71,8 +73,8 @@ class Operation:
     summary: str | None
     description: str | None
     parameters: Sequence[Parameter] | None
-    externalDocs: info.ExternalDocs | None
-    servers: Sequence[server.Server] | None
+    externalDocs: ExternalDocs | None
+    servers: Sequence[Server] | None
 
     def __init__(
             self,
@@ -85,8 +87,8 @@ class Operation:
             summary: str | None = None,
             description: str | None = None,
             parameters: Sequence[Parameter] | None = None,
-            externalDocs: info.ExternalDocs | None = None,
-            servers: Sequence[server.Server] | None = None,
+            externalDocs: ExternalDocs | None = None,
+            servers: Sequence[Server] | None = None,
     ):
         self.deprecated = deprecated
         self.requestBody = requestBody
@@ -106,14 +108,14 @@ class GetOperation(Operation):
 class PostOperation(Operation):
     method: HttpMethod = "post"
 
-class PatchOperation(Operation):
-    method: HttpMethod = "patch"
-
 class PutOperation(Operation):
     method: HttpMethod = "put"
 
 class DeleteOperation(Operation):
     method: HttpMethod = "delete"
+
+class PatchOperation(Operation):
+    method: HttpMethod = "patch"
 
 class HeadOperation(Operation):
     method: HttpMethod = "head"
@@ -141,7 +143,6 @@ class Path:
     def __init__(
             self,
             path: PathPattern,
-            ref: PathReference | None = None
             summary: str | None = None,
             description: str | None = None,
             **methods: Operation

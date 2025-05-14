@@ -3,10 +3,7 @@
 Classes for representing Requests
 """
 
-from typing import Mapping
-
-Mimetype: str
-Content: Mapping[Mimetype, Schema]
+from .datatypes import Content
 
 
 class RequestBody:
@@ -20,7 +17,7 @@ class RequestBody:
 
     def __init__(
             self,
-            content: Content
+            content: Content,
             description: str | None = None,
             required: bool | None = None,
     ):

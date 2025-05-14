@@ -3,10 +3,7 @@
 Classes for representing API paths
 """
 
-from typing import Mapping
-
-Mimetype: str
-Content: Mapping[Mimetype, Schema]
+from .datatypes import Content
 
 
 class Response:
@@ -20,8 +17,8 @@ class Response:
 
     def __init__(
             self,
-            status_code: str
-            content: Content
+            status_code: str,
+            content: Content,
             description: str | None = None,
     ):
         self.status_code = status_code
