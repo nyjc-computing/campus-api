@@ -4,7 +4,7 @@ Classes for representing the components section of OpenAPI.
 """
 
 from .datatypes import Schema
-from .path import Parameter
+from .paths import Parameter
 from .request import RequestBody
 from .response import Response
 
