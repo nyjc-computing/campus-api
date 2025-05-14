@@ -6,6 +6,7 @@ Classes for representing API paths
 from typing import Literal, Sequence
 
 from . import info, response, server
+from .reference import PathReference
 from .request import RequestBody
 from .response import Content, Mimetype, Response
 
@@ -134,6 +135,7 @@ class Path:
     https://swagger.io/docs/specification/v3.0/paths-and-operations/
     """
     path: PathPattern
+    ref: PathReference | None
     summary: str | None = None
     description: str | None = None
     methods: Mapping[HttpMethod, Operation]
@@ -141,11 +143,15 @@ class Path:
     def __init__(
             self,
             path: PathPattern,
+            ref: PathReference | None = None
             summary: str | None = None,
             description: str | None = None,
             **methods: Operation
     ):
+        if ref and (summary or description or methods):
+            raise ValueError("$ref overrides all provided attributes, which should not be provided)
         self.path = path
+        self.ref = ref
         self.summary = summary
         self.description = description
         invalid_methods = [
