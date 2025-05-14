@@ -6,6 +6,7 @@ Classes for representing API paths
 from typing import Literal, Sequence
 
 from . import info, response, server
+from .request import RequestBody
 from .response import Content, Mimetype, Response
 
 PathPattern: str
@@ -63,6 +64,7 @@ class Operation:
     """
     method: HttpMethod
     deprecated: bool | None
+    requestBody: RequestBody | None
     responses: Sequence[Response] | None 
     operationId: str | None
     tags: Sequence[str]
@@ -76,6 +78,7 @@ class Operation:
             self,
             *,
             deprecated: bool | None = None,
+            requestBody: RequestBody | None = None,
             responses: Sequence[Response] | None = None, 
             operationId: str | None = None,
             tags: Sequence[str] = (),
@@ -86,6 +89,7 @@ class Operation:
             servers: Sequence[server.Server] | None = None,
     ):
         self.deprecated = deprecated
+        self.requestBody = requestBody
         self.responses = responses
         self.operationId = operationId
         self.tags = tuple(tags)
