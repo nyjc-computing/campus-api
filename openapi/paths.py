@@ -5,13 +5,12 @@ Classes for representing API paths
 
 from typing import Literal, Sequence
 
-from . import info, server
+from . import info, response, server
+from .response import Content, Mimetype, Response
 
-Mimetype: str
 PathPattern: str
 HttpMethod = Literal["get", "post", "patch", "put", "delete", "head", "options", "trace", "connect"]
 ParameterLocation = Literal["cookie", "header", "path", "query"]
-Content: Mapping[Mimetype, Schema]
 
 
 class Parameter:
@@ -55,26 +54,6 @@ class Parameter:
         self.schema = schema
         self.content = content
         self.required = required
-
-    
-class Response:
-    """Represents a response as defined in OpenAPI 3.0.
-
-    https://swagger.io/docs/specification/v3.0/describing-responses/
-    """
-    status_code: str  # OpenAPI represents status codes as strings
-    description: str | None
-    content: Content
-
-    def __init__(
-            self,
-            status_code: str
-            content: Content
-            description: str | None = None,
-    ):
-        self.status_code = status_code
-        self.description = description
-        self.content = dict(content)
 
 
 class Operation:
