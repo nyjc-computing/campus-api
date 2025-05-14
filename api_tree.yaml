@@ -136,6 +136,8 @@ components:
           type: string
           format: date-time
           description: The creation date of the client.
+        # Note that secret_hash is never returned in the response
+        # It is only returned in a /replace request
     User:
       type: object
       properties:
@@ -153,5 +155,65 @@ components:
           type: string
           format: date-time
           description: The activation date of the user.
+    user_id:
+      type: string
+      pattern: ^[a-zA-Z0-9.-_]{1,64}$
+    client_id:
+      type: string
+      pattern: ^uid-client-[a-z0-9]{8}$
+    campus_word:
+      type: string
+      pattern: ^[a-z]{2:15}{2-15}$
+    campus_name:
+      type: string
+      pattern: ^[a-z]{2:15}(-[a-z]{2:15}){0,2}$
+    circle_id:
+      type: string
+      pattern: ^uid-circle-[a-z0-9]{8}$
+    otp:
+      type: string
+      pattern: ^[0-9]{6}$
 
   parameters:
+    user_id:
+      name: user_id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/user_id'
+    client_id:
+      name: client_id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/client_id'
+    client_name:
+      name: client_name
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/campus_name'
+    circle_id:
+      name: circle_id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/circle_id'
+    circle_name:
+      name: circle_name
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/campus_name'
+    circle_tag:
+      name: circle_tag
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/campus_word'
+    otp:
+      name: otp
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/otp'
