@@ -3,6 +3,7 @@ servers:
     description: Campus API (development, staging)
   - url: https://api.campus.nyjc.app/v1
     description: Campus API (production)
+
 paths:
   /clients:
     summary: Represents all clients in the system.
@@ -11,37 +12,121 @@ paths:
   /clients/{client_id}:
     summary: Represents a single client.
     get:
+      parameters:
+        - in: path
+          name: client_id
+          required: true
+          description: The ID of the client to retrieve.
+          schema:
+            type: string
     patch:
+      parameters:
+        - in: path
+          name: client_id
+          required: true
+          description: The ID of the client to retrieve.
+          schema:
+            type: string
     delete:
+      parameters:
+        - in: path
+          name: client_id
+          required: true
+          description: The ID of the client to retrieve.
+          schema:
+            type: string
   /clients/{client_id}/replace:
     summary: Revoke and reissue a client secret.
     put:
+      parameters:
+        - in: path
+          name: client_id
+          required: true
+          description: The ID of the client to retrieve.
+          schema:
+            type: string
   /clients/applications:
     summary: Represents all applications (requests for client id) in the system.
     get:
     post:
-  /clients/applications/{application_id}:
+  /clients/applications/{client_application_id}:
     summary: Represents a single application.
     get: 
+      parameters:
+        - in: path
+          name: client_application_id
+          required: true
+          description: The ID of the client application to retrieve.
+          schema:
+            type: string
     delete: 
-  /clients/applications/{application_id}/approve:
+      parameters:
+        - in: path
+          name: client_application_id
+          required: true
+          description: The ID of the client application to retrieve.
+          schema:
+            type: string
+  /clients/applications/{client_application_id}/approve:
     summary: Approve an application.
     put:
-  /clients/applications/{application_id}/reject:
+      parameters:
+        - in: path
+          name: client_application_id
+          required: true
+          description: The ID of the client application to retrieve.
+          schema:
+            type: string
+  /clients/applications/{client_application_id}/reject:
     summary: Reject an application.
     put:
-  /clients/applications/{application_id}/cancel:
+      parameters:
+        - in: path
+          name: client_application_id
+          required: true
+          description: The ID of the client application to retrieve.
+          schema:
+            type: string
+  /clients/applications/{client_application_id}/cancel:
     summary: Cancel an application.
     put:
-  /clients/applications/{application_id}/admins:
+      parameters:
+        - in: path
+          name: client_application_id
+          required: true
+          description: The ID of the client application to retrieve.
+          schema:
+            type: string
+  /clients/applications/{client_application_id}/admins:
     summary: Represents all admins for a client.
     get:
-  /clients/applications/{application_id}/admins/add:
-    summary: Represents a single admin for a client.
+      parameters:
+        - in: path
+          name: client_application_id
+          required: true
+          description: The ID of the client application to retrieve.
+          schema:
+            type: string
+  /clients/applications/{client_application_id}/admins/add:
+    summary: Adds an admin for a client.
     post:
-  /clients/applications/{application_id}/admins/remove:
-    summary: Represents a single admin for a client.
+      parameters:
+        - in: path
+          name: client_application_id
+          required: true
+          description: The ID of the client application to retrieve.
+          schema:
+            type: string
+  /clients/applications/{client_application_id}/admins/remove:
+    summary: Removes an admin for a client.
     delete:
+      parameters:
+        - in: path
+          name: client_application_id
+          required: true
+          description: The ID of the client application to retrieve.
+          schema:
+            type: string
   /emailotp/request:
     summary: Request an email OTP.
     post:
@@ -54,5 +139,27 @@ paths:
   /users/{user_id}:
     summary: Represents a single user.
     get:
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          description: The User ID
+          schema:
+            type: string
     patch:
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          description: The User ID
+          schema:
+            type: string
     delete:
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          description: The User ID
+          schema:
+            type: string
+
