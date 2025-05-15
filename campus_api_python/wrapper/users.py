@@ -3,9 +3,9 @@
 Represents operations on the users resource in Campus.
 """
 
-from campus.schema.datatypes import UserID, Validatable
-from campus.schema.modeltypes import User as UserModel
-from campus.wrapper.base import SingleResource, ResourceCollection
+from campus_api_python.schema.datatypes import UserID, Validatable
+from campus_api_python.schema.modeltypes import User as UserModel
+from campus_api_python.wrapper.base import SingleResource, ResourceCollection
 
 from . import http
 

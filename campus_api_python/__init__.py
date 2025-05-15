@@ -1,3 +1,5 @@
+"""campus_api_python - A Python wrapper for the Campus API."""
+
 from .wrapper import CampusClient
 
 from .utils import load_config
