@@ -21,7 +21,7 @@ ResourceName = LowerLetterWord
 CampusLabel = fr'{LowerLetterWord}(-{LowerLetterWord}){{0,2}}'
 UserIDPattern = r'[a-zA-Z0-9._-]{1,64}'
 DomainPattern = r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
-EmailAddress = fr'{UserID}@{Domain}'
+EmailAddress = fr'{UserIDPattern}@{DomainPattern}'
 
 Uid8Pattern = fr'{LowerLetterDecimalChar}{{8}}'
 Uid16Pattern = fr'{LowerLetterDecimalChar}{{16}}'
