@@ -23,11 +23,14 @@ class User(SingleResource):
         api_path = self.build_path()
         http.delete(api_path)
 
-    def get(self) -> UserModel:
+    def get(self) -> UserModel | None:
         """.users[{user_id}].get()"""
         api_path = self.build_path()
         resp_json = http.get(api_path)
-        return UserModel(**resp_json)
+        if 'error_code' in resp_json:
+            self.root.handle_error(resp_json, api_path, 'GET')
+        else:
+            return UserModel(**resp_json)
 
     def update(self, **kwargs: Validatable) -> None:
         """.users[{user_id}].update(...)"""

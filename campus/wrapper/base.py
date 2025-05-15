@@ -1,5 +1,6 @@
+import logging
 import re
-from typing import Protocol
+from typing import Callable, Protocol
 
 from campus.schema.datatypes import UserID, CampusID
 
@@ -13,6 +14,15 @@ BaseUrlPattern = re.compile(
 VersionPattern = re.compile(r"^v\d+$")
 
 URL_SEP = "/"
+
+
+def log_error(error: dict, path: str, method: str) -> None:
+    log_str = f"{method.upper()} {path} - {error['error_code']}"
+    logging.error(log_str)
+    if error['message']:
+        logging.info(f"Message: {error['message']}")
+    if error['details']:
+        logging.info(f"Details: {error['details']}")
 
 
 class BaseUrl(str):
@@ -55,9 +65,17 @@ class CampusAPI(Pathable):
     base_url: BaseUrl
     version: Version
 
-    def __init__(self, base_url: str, version: str, *args, **kwargs):
+    def __init__(self,
+            base_url: str,
+            version: str,
+            on_error: Callable[[dict, str, str], None] = log_error,
+            *args,
+            **kwargs
+    ):
         self.base_url = BaseUrl(base_url)
         self.version = Version(version)
+        self.on_error = on_error
+        self.last_error = None
         
     def build_path(self, *args: str) -> str:
         """Build a path for the API.
@@ -65,6 +83,15 @@ class CampusAPI(Pathable):
         This method is used to build a path for the API call.
         """
         return URL_SEP.join([self.base_url, self.version, *args])
+    
+    def handle_error(self, error: dict, path: str, method: str) -> None:
+        """Handle an error response from the API.
+
+        This method is used to handle an error response from the API.
+        """
+        self.last_error = error
+        if self.on_error:
+            self.on_error(error, path, method)
 
 class CampusResource(Pathable):
     """Base class for resources in the Campus API.
