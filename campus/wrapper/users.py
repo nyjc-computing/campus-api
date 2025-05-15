@@ -5,15 +5,12 @@ Represents operations on the users resource in Campus.
 
 from campus.schema.datatypes import UserID, Validatable
 from campus.schema.modeltypes import User
+from campus.wrapper.base import SingleResource, ResourceCollection
 
 
-class UserResource:
+class User(SingleResource):
     """Represents operations on a single user resource in Campus.
     """
-
-    def __init__(self, parent, user_id: UserID):
-        self.user_id = user_id
-        self.parent = parent
 
     def activate(self) -> None:
         """.users[{user_id}].activate()"""
@@ -32,16 +29,13 @@ class UserResource:
         # TODO: API call to update user
 
     
-class UserCollection:
+class Users(ResourceCollection):
     """Represents operations on users in Campus."""
 
-    def __init__(self, parent):
-        self.parent = parent
-
-    def __getitem__(self, user_id: str) -> UserResource:
+    def __getitem__(self, user_id: str) -> User:
         """Get a user by ID."""
         UserID.validate(user_id)
-        return UserResource(self, UserID(user_id))
+        return User(self, UserID(user_id))
 
     def new(self, **kwargs: Validatable) -> User:
         """.clients.new(...)"""
