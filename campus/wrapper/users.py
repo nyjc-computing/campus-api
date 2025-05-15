@@ -40,12 +40,12 @@ class Users(ResourceCollection):
     """Represents operations on users in Campus."""
 
     def __getitem__(self, user_id: str) -> User:
-        """Get a user by ID."""
+        """.users[{user_id}]"""
         UserID.validate(user_id)
         return User(self, UserID(user_id))
 
     def new(self, **kwargs: Validatable) -> User:
-        """.clients.new(...)"""
+        """.users.new(...)"""
         user = UserModel(**kwargs)
         api_path = self.build_path()
         http.post(api_path, data=user.as_json())
