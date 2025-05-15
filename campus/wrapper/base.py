@@ -10,6 +10,7 @@ JsonSerializable = JsonSerializableValues | list["JsonSerializable"] | dict[str,
 BaseUrlPattern = re.compile(
     r"^(https?://)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(/.*)?$"
 )
+VersionPattern = re.compile(r"^v\d+$")
 
 URL_SEP = "/"
 
@@ -32,7 +33,7 @@ class Version(str):
     """
 
     def __new__(cls, value: str):
-        if not re.match(r"^v\d+$", value):
+        if not VersionPattern.match(value):
             raise ValueError(f"Invalid version: {value}")
         return super().__new__(cls, value)
 
