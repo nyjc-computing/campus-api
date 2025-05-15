@@ -8,6 +8,10 @@ from datetime import date, datetime, time
 import re
 from typing import Any, Literal, Protocol, runtime_checkable
 
+# OpenAPI does not support null values, only nullable types
+JsonSerializableValues = int | float | str | bool
+JsonSerializable = JsonSerializableValues | list["JsonSerializable"] | dict[str, "JsonSerializable"]
+
 # Lowercase letters only
 LowerLetterChar = r'[a-z]'
 DecimalChar = r'[0-9]'
@@ -53,6 +57,12 @@ class Validatable(Protocol):
             f"{self.__class__.__name__} does not implement validate()"
         )
 
+    def as_json(self) -> JsonSerializable:
+        """Return the value as a JSON-serialisable response."""
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not implement as_json()"
+        )
+
 class String(Validatable, str):
     """A typical string type."""
     
@@ -61,9 +71,13 @@ class String(Validatable, str):
         """Validate the string value."""
         if not isinstance(value, str):
             raise ValueError(f"Value is not a string: {value}")
+        
+    def as_json(self) -> str:
+        """Return the string as a JSON-serialisable response."""
+        return str(self)
 
 
-class StringPattern(Validatable, str):
+class StringPattern(String):
     """String pattern is a string with a regex pattern.
 
     The pattern is used to validate the string.
@@ -85,7 +99,7 @@ class StringPattern(Validatable, str):
             raise ValueError(
                 f"Value does not match pattern {cls.pattern.pattern!r}: {value}"
             )
-
+        
 
 class Base64String(StringPattern):
     """Base64-encoded string.

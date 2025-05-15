@@ -97,6 +97,14 @@ class CampusModel(dict[str, Validatable]):
         if field in self:
             return self[field]
         raise AttributeError(f"{type(self).__name__}.{field}: no such field")
+    
+    def as_json(self) -> dict[str, Any]:
+        """Return the model as a JSON-serialisable response."""
+        return {
+            field: value.as_json()
+            for field, value in self.items()
+            if not (field in self.__hidden__ or field in self.__request_only__)
+        }
 
 
 class User(CampusModel):
