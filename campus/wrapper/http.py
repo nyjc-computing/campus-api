@@ -67,7 +67,7 @@ def get(url: str) -> JsonSerializable:
     Returns:
         JsonSerializable: The JSON response from the API.
     """
-    return _call_api("GET", url)
+    return _call_api("GET", url, None)
 
 def post(url: str, data: dict | None = None) -> JsonSerializable:
     """Make a POST request to the Campus API.
