@@ -5,7 +5,7 @@ The data types are based on native Python types as far as possible,
 and will be used to generate OpenAPI schemas for the campus API.
 """
 import re
-from typing import Literal
+from typing import Any, Literal, Protocol, runtime_checkable
 
 # Lowercase letters only
 LowerLetterChar = r'[a-z]'
@@ -29,7 +29,19 @@ Uid16Pattern = fr'{LowerLetterDecimalChar}{{16}}'
 UidPrefix = Literal["uid"]
 
 
-class StringPattern(str):
+@runtime_checkable
+class Validatable(Protocol):
+    """Base class for all values requiring validation."""
+
+    def validate(self, value: Any) -> None:
+        """Validate the value against the pattern, raising a ValueError if
+        invalid.
+        """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not implement validate()"
+        )
+
+class StringPattern(Validatable, str):
     """String pattern is a string with a regex pattern.
 
     The pattern is used to validate the string.
