@@ -2,7 +2,7 @@ import logging
 import re
 from typing import Callable, Protocol
 
-from campus_api_python.schema.datatypes import UserID, CampusID
+from campus.schema.datatypes import UserID, CampusID
 
 # OpenAPI does not support null values, only nullable types
 JsonSerializableValues = int | float | str | bool

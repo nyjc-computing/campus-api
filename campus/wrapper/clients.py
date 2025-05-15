@@ -3,9 +3,9 @@
 Represents operations on the clients resource in Campus.
 """
 
-from campus_api_python.schema.datatypes import ClientID, Validatable
-from campus_api_python.schema.modeltypes import Client as ClientModel
-from campus_api_python.wrapper.base import SingleResource, ResourceCollection
+from campus.schema.datatypes import ClientID, Validatable
+from campus.schema.modeltypes import Client as ClientModel
+from campus.wrapper.base import SingleResource, ResourceCollection
 
 from . import http
 
