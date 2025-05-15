@@ -18,10 +18,9 @@ LowerLetterWord = r'[a-z]{2,15}'
 # Resource names are limited to a single lowercase word
 ResourceName = LowerLetterWord
 # Campus allows hyphenated lowercase words (up to 3 parts) as name labels
-CampusLabel = fr'{LowerLetterWord}(-{LowerLetterWord}){{0,2}}'
+CampusLabelPattern = fr'{LowerLetterWord}(-{LowerLetterWord}){{0,2}}'
 UserIDPattern = r'[a-zA-Z0-9._-]{1,64}'
 DomainPattern = r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
-EmailAddress = fr'{UserIDPattern}@{DomainPattern}'
 
 Uid8Pattern = fr'{LowerLetterDecimalChar}{{8}}'
 Uid16Pattern = fr'{LowerLetterDecimalChar}{{16}}'
@@ -40,6 +39,16 @@ class Validatable(Protocol):
         raise NotImplementedError(
             f"{self.__class__.__name__} does not implement validate()"
         )
+
+class String(Validatable, str):
+    """A typical string type."""
+    
+    @classmethod
+    def validate(cls, value: str) -> None:
+        """Validate the string value."""
+        if not isinstance(value, str):
+            raise ValueError(f"Value is not a string: {value}")
+
 
 class StringPattern(Validatable, str):
     """String pattern is a string with a regex pattern.
@@ -108,7 +117,7 @@ class CampusID(UID):
 
     Example: uid-client-12345678
     """
-    pattern = fr"^{UidPrefix}-({CampusLabel})-({Uid8Pattern})$"
+    pattern = fr"^{UidPrefix}-({CampusLabelPattern})-({Uid8Pattern})$"
 
     def __new__(cls, value):
         if not (match := cls.pattern.match(value)):
@@ -144,6 +153,15 @@ class CircleID(CampusID):
     """
     pattern = fr"^{UidPrefix}-circle-{Uid8Pattern}$"
     label: Literal["circle"]
+
+
+class CampusLabel(StringPattern):
+    """Campus labels are hyphenated lowercase words.
+
+    The label is limited to 3 parts, and each part is a lowercase word
+    with a length of 2 to 15 characters.
+    """
+    pattern = fr"^{CampusLabelPattern}$"
 
 
 class OTP(StringPattern):
