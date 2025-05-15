@@ -12,6 +12,7 @@ from campus import config
 
 __all__ = [
     "CampusClient",
+    "get_client",
 ]
 
 
