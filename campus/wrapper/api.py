@@ -13,15 +13,13 @@ from campus.wrapper.base import CampusAPI
 from campus.wrapper.clients import Clients
 from campus.wrapper.users import Users
 
-Version = Literal["v1"]
-
 
 class CampusClient(CampusAPI):
     clients: Clients
     users: Users
 
-    def __init__(self, base_url: str, version: Version = Literal["v1"]):
-        self.base_url = base_url
+    def __init__(self, base_url: str, version = Literal["v1"]):
+        super().__init__(base_url, version)
         # TODO: Add authentication parameters
         self.clients = Clients(self)
         self.users = Users(self)
