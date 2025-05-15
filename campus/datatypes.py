@@ -26,7 +26,7 @@ EmailAddress = fr'{UserID}@{Domain}'
 Uid8Pattern = fr'{LowerLetterDecimalChar}{{8}}'
 Uid16Pattern = fr'{LowerLetterDecimalChar}{{16}}'
 
-Prefix = Literal["uid"]
+UidPrefix = Literal["uid"]
 
 
 class StringPattern(str):
@@ -60,14 +60,14 @@ class UID(StringPattern):
 
 
 class CampusID(UID):
-    """Campus IDs are UIDs prefixed with a namespace.
+    """Campus IDs are UIDs UidPrefixed with a namespace.
 
     The namespace is 'uid-' followed by a string of hyphenated lowercase words,
       with up to 3 parts.
 
     Example: uid-client-12345678
     """
-    pattern = fr"^{Prefix}-{CampusName}-{Uid8Pattern}$"
+    pattern = fr"^{UidPrefix}-{CampusName}-{Uid8Pattern}$"
 
     def __new__(cls, value):
         if not cls.pattern.match(value):
@@ -76,14 +76,14 @@ class CampusID(UID):
 
 
 class ClientID(UID):
-    """Client IDs are UIDs prefixed with a namespace.
+    """Client IDs are UIDs UidPrefixed with a namespace.
 
     The namespace is 'uid-client-' followed by a string of lowercase letters
       and numbers, with a length of 8 characters.
 
     Example: uid-client-12345678
     """
-    pattern = fr"^{Prefix}-client-{Uid8Pattern}$"
+    pattern = fr"^{UidPrefix}-client-{Uid8Pattern}$"
 
     def __new__(cls, value):
         if not cls.pattern.match(value):
@@ -92,14 +92,14 @@ class ClientID(UID):
 
 
 class CircleID(UID):
-    """Circle IDs are UIDs prefixed with a namespace.
+    """Circle IDs are UIDs UidPrefixed with a namespace.
 
     The namespace is 'uid-circle-' followed by a string of lowercase letters
       and numbers, with a length of 8 characters.
 
     Example: uid-circle-12345678
     """
-    pattern = fr"^{Prefix}-circle-{Uid8Pattern}$"
+    pattern = fr"^{UidPrefix}-circle-{Uid8Pattern}$"
 
     def __new__(cls, value):
         if not cls.pattern.match(value):
