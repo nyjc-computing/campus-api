@@ -4,8 +4,10 @@ Represents operations on the clients resource in Campus.
 """
 
 from campus.schema.datatypes import ClientID, Validatable
-from campus.schema.modeltypes import Client
+from campus.schema.modeltypes import Client as ClientModel
 from campus.wrapper.base import SingleResource, ResourceCollection
+
+from . import http
 
 
 class Client(SingleResource):

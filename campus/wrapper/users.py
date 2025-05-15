@@ -4,29 +4,36 @@ Represents operations on the users resource in Campus.
 """
 
 from campus.schema.datatypes import UserID, Validatable
-from campus.schema.modeltypes import User
+from campus.schema.modeltypes import User as UserModel
 from campus.wrapper.base import SingleResource, ResourceCollection
+
+from . import http
 
 
 class User(SingleResource):
-    """Represents operations on a single user resource in Campus.
-    """
+    """Represents operations on a single user resource in Campus."""
 
     def activate(self) -> None:
         """.users[{user_id}].activate()"""
+        api_path = self.build_path('activate')
+        http.post(api_path)
     
     def delete(self) -> None:
         """.users[{user_id}].delete()"""
-        # TODO: API call to delete user
+        api_path = self.build_path()
+        http.delete(api_path)
 
-    def get(self) -> User:
+    def get(self) -> UserModel:
         """.users[{user_id}].get()"""
-        # TODO: API call to get user
+        api_path = self.build_path()
+        resp_json = http.get(api_path)
+        return UserModel(**resp_json)
 
     def update(self, **kwargs: Validatable) -> None:
         """.users[{user_id}].update(...)"""
         User.validate_request(kwargs)
-        # TODO: API call to update user
+        api_path = self.build_path()
+        http.put(api_path, data=kwargs)
 
     
 class Users(ResourceCollection):
@@ -39,7 +46,8 @@ class Users(ResourceCollection):
 
     def new(self, **kwargs: Validatable) -> User:
         """.clients.new(...)"""
-        user = User(**kwargs)
-        # TODO: API call to post user
-        return User
+        user = UserModel(**kwargs)
+        api_path = self.build_path()
+        http.post(api_path, data=user.as_json())
+        return User(self, user.id)
 
