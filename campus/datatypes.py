@@ -1,37 +1,63 @@
-from openapi.datatypes import (
-    Schema,
-    BasicSchema,
-    String,
-    Number,
-    Integer,
-    Boolean,
-    Array,
-    Object
-)
+"""campus/datatypes
 
-class UID(String):
+Campus data types, designed for OpenAPI compatibility.
+The data types are based on native Python types as far as possible,
+and will be used to generate OpenAPI schemas for the campus API.
+"""
+import re
+from typing import Literal
+
+# Lowercase letters only
+LowerLetterChar = r'[a-z]'
+DecimalChar = r'[0-9]'
+# Lowercase letters and numbers
+LowerLetterDecimalChar = r'[a-z0-9]'
+# Lowercase word (limit length to 15 characters, disallow single character)
+LowerLetterWord = r'[a-z]{2,15}'
+
+# Resource names are limited to a single lowercase word
+ResourceName = LowerLetterWord
+# Campus allows hyphenated lowercase words (up to 3 parts) as name labels
+CampusLabel = fr'{LowerLetterWord}(-{LowerLetterWord}){{0,2}}'
+UserID = r'[a-zA-Z0-9._-]{1,64}'
+Domain = r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+EmailAddress = fr'{UserID}@{Domain}'
+
+Uid8Pattern = fr'{LowerLetterDecimalChar}{{8}}'
+Uid16Pattern = fr'{LowerLetterDecimalChar}{{16}}'
+
+Prefix = Literal["uid"]
+
+
+class StringPattern(str):
+    """String pattern is a string with a regex pattern.
+
+    The pattern is used to validate the string.
+    """
+    pattern: re.Pattern
+
+    def __new__(cls, value):
+        if not cls.pattern.match(value):
+            raise ValueError(f"Invalid string: {value}")
+        return super().__new__(cls, value)
+
+
+class UID(StringPattern):
     """Campus IDs are based on shortened, base64-encoded UUIDs.
 
     They only use lowercase letters and numbers for ease of use.
 
-    Campus IDs have 2 lengths:
-    - short: 8 characters
-    - long: 16 characters
+    Campus IDs are 8 or 16 characters.
+    - 8 chars are used for resource IDs, expected to be limited in number.
+    - 16 chars are used for source IDs, event IDs and other voluminuous IDs.
     """
-    type = "string"
-    format = "campus_id"
+    pattern: re.Pattern
 
-class ShortUID(UID):
-    """Shortened UID with 8 characters."""
-    pattern = r"^[a-z0-9]{8}$"
-    min_length = 8
-    max_length = 8
+    def __new__(cls, value):
+        if not cls.pattern.match(value):
+            raise ValueError(f"Invalid UID: {value}")
+        return super().__new__(cls, value)
 
-class LongUID(UID):
-    """Long UID with 16 characters."""
-    pattern = r"^[a-z0-9]{16}$"
-    min_length = 16
-    max_length = 16
 
 class CampusID(UID):
     """Campus IDs are UIDs prefixed with a namespace.
@@ -41,69 +67,49 @@ class CampusID(UID):
 
     Example: uid-client-12345678
     """
-    pattern = r"uid-([a-z]{2,16}(-[a-z]{2,16}){0,2})-^[a-z0-9]{8}|[a-z0-9]{16}$"
-    min_length = 8
-    max_length = 16
+    pattern = fr"^{Prefix}-{CampusName}-{Uid8Pattern}$"
 
-class UserID(String):
-    """User ID is the username component of the email address, assumed to be
-      unique within a campus.
+    def __new__(cls, value):
+        if not cls.pattern.match(value):
+            raise ValueError(f"Invalid UID: {value}")
+        return super().__new__(cls, value)
 
-    Example: user.name_2024
-    """
-    pattern = r"^[a-zA-Z0-9._-]{1,64}$"
-    min_length = 1
-    max_length = 64
-    format = "user_id"
 
-class ClientID(ShortUID):
-    """UID to identify a client.
-    
+class ClientID(UID):
+    """Client IDs are UIDs prefixed with a namespace.
+
+    The namespace is 'uid-client-' followed by a string of lowercase letters
+      and numbers, with a length of 8 characters.
+
     Example: uid-client-12345678
     """
-    pattern = r"^uid-client-[a-z0-9]{8}$"
-    min_length = 8
-    max_length = 8
-    format = "client_id"
+    pattern = fr"^{Prefix}-client-{Uid8Pattern}$"
 
-class CampusWord(String):
-    """Campus word is a string of lowercase letters, with a length between 2
-      and 15 characters.
+    def __new__(cls, value):
+        if not cls.pattern.match(value):
+            raise ValueError(f"Invalid UID: {value}")
+        return super().__new__(cls, value)
 
-    Example: nyjc
-    """
-    pattern = r"^[a-z]{2,15}$"
-    min_length = 2
-    max_length = 15
-    format = "campus_word"
 
-class CampusName(String):
-    """Campus name is a string of lowercase letters, with a length between 2
-      and 15 characters, and can have up to 2 hyphenated parts.
+class CircleID(UID):
+    """Circle IDs are UIDs prefixed with a namespace.
 
-    Example: nyjc-north
-    """
-    pattern = r"^[a-z]{2,15}(-[a-z]{2,15}){0,2}$"
-    min_length = 2
-    max_length = 15
-    format = "campus_name"
-
-class CircleID(ShortUID):
-    """UID to identify a circle.
+    The namespace is 'uid-circle-' followed by a string of lowercase letters
+      and numbers, with a length of 8 characters.
 
     Example: uid-circle-12345678
     """
-    pattern = r"^uid-circle-[a-z0-9]{8}$"
-    min_length = 8
-    max_length = 8
-    format = "circle_id"
+    pattern = fr"^{Prefix}-circle-{Uid8Pattern}$"
 
-class OTP(String):
+    def __new__(cls, value):
+        if not cls.pattern.match(value):
+            raise ValueError(f"Invalid UID: {value}")
+        return super().__new__(cls, value)
+
+
+class OTP(StringPattern):
     """One-time password (OTP) is a 6-digit number.
 
     Example: 123456
     """
-    pattern = r"^[0-9]{6}$"
-    min_length = 6
-    max_length = 6
-    format = "otp"
+    pattern = fr"^{DecimalChar}{{6}}$"
