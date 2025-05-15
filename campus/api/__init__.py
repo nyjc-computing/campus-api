@@ -8,10 +8,12 @@ represented as methods.
 """
 
 from campus.api.api import CampusClient
+from campus.api.base import CampusResource
 from campus import config
 
 __all__ = [
     "CampusClient",
+    "CampusResource",
     "get_client",
 ]
 
