@@ -1,4 +1,4 @@
-"""campus_api_python - A Python wrapper for the Campus API."""
+"""campus - A Python wrapper for the Campus API."""
 
 from .api import CampusClient
 from . import config

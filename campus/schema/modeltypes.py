@@ -1,8 +1,12 @@
+"""campus/schema/modeltypes
+
+Campus API model types.
+"""
 from typing import Any, Mapping
 
 from openapi.schema.datatypes import format_keyvalues
 
-from .datatypes import (
+from campus.schema.datatypes import (
     Base64String,
     CampusID,
     CampusLabel,

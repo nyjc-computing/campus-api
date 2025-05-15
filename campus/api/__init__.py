@@ -1,4 +1,4 @@
-"""campus/wrapper
+"""campus/api
 
 A Campus Web API wrapper for Python.
 

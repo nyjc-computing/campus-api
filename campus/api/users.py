@@ -1,4 +1,4 @@
-"""campus/operations/users
+"""campus/api/users
 
 Represents operations on the users resource in Campus.
 """

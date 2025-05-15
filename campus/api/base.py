@@ -1,4 +1,4 @@
-"""campus/wrapper/base
+"""campus/api/base
 
 Base classes and types for Campus Python API.
 """

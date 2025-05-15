@@ -1,3 +1,7 @@
+"""campus/config/utils
+
+Utility functions for configuration management in the Campus API Python wrapper.
+"""
 import json
 
 def load_config(file_path: str):

@@ -1,4 +1,4 @@
-"""campus/datatypes
+"""campus/schema/datatypes
 
 Campus data types, designed for OpenAPI compatibility.
 The data types are based on native Python types as far as possible,

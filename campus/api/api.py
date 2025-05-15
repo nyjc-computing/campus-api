@@ -1,4 +1,4 @@
-"""campus/wrapper/api
+"""campus/api/api
 
 Encapsulates operations on Campus resources.
 

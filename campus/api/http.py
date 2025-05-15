@@ -1,4 +1,4 @@
-"""campus/wrapper/http
+"""campus/api/http
 
 Implements HTTP calls for the Campus API.
 """

@@ -1,4 +1,4 @@
-"""campus_api_python.config
+"""campus.config
 
 Configuration management for the Campus API Python wrapper.
 """
