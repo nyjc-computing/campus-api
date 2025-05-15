@@ -1,3 +1,7 @@
+"""campus/wrapper/base
+
+Base classes and types for Campus Python API.
+"""
 import logging
 import re
 from typing import Callable, Protocol
