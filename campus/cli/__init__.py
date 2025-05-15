@@ -133,13 +133,3 @@ class Parser:
             except AttributeError as err:
                 raise ParseError(f"Unknown resource: {arg}") from err
         return APICall(resource, params, path=self.consumed)
-
-
-if __name__ == "__main__":
-    parser = Parser(sys.argv)
-    apiresult = parser.parse()
-    if apiresult:
-        result = apiresult.give()
-        # TODO: Format result
-        print(result)
-    sys.exit(0)
