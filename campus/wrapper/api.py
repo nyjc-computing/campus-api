@@ -21,3 +21,10 @@ class CampusClient(CampusAPI):
         # TODO: Add authentication parameters
         self.clients = Clients(self)
         self.users = Users(self)
+
+    @classmethod
+    def from_config(cls, config: dict):
+        """Create a CampusClient from a configuration dictionary."""
+        base_url = config.get("base_url", "https://api.campus.nyjc.dev")
+        version = config.get("version", "v1")
+        return cls(base_url, version)
