@@ -25,6 +25,7 @@ DomainPattern = r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
 
 Uid8Pattern = fr'{LowerLetterDecimalChar}{{8}}'
 Uid16Pattern = fr'{LowerLetterDecimalChar}{{16}}'
+Base64Pattern = r'^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$'
 
 # Date and time patterns as defined in RFC 3339, section 5.6 (from OpenAPI 3.0)
 YearPattern = r'\d{4}'
@@ -84,6 +85,14 @@ class StringPattern(Validatable, str):
             raise ValueError(
                 f"Value does not match pattern {cls.pattern.pattern!r}: {value}"
             )
+
+
+class Base64String(StringPattern):
+    """Base64-encoded string.
+
+    This class is used to represent a base64-encoded string.
+    """
+    pattern = re.compile(Base64Pattern)
 
 
 class UserID(StringPattern):
