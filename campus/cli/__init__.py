@@ -3,14 +3,18 @@
 Command line interface for the Campus API.
 """
 import logging
+import os
 import sys
 from typing import Callable, Mapping, Sequence
 from warnings import warn
 
-from campus.api import get_client
+from campus.api import CampusClient, CampusResource, get_client
+from campus.cli import pattern
 
 logging.basicConfig(level=logging.INFO)
 
+HELP_DIR = os.path.dirname(__file__)
+HELP_FILE = "README.md"
 SEP = " "
 
 client = get_client()
@@ -30,25 +34,20 @@ class APICall:
 
     def __init__(
             self,
-            api_callable: Callable,
+            resource: Callable | dict,
             params: Mapping,
             *,
             path: list[str],
     ):
-        self.callable = api_callable
+        self.resource = resource
         self.params = params
 
-    def __call__(self):
-        """Call the API with the given parameters."""
-        logging.debug(f"API path: {self.path}")
-        logging.debug(f"API params: {", ".join(
-            [f'{k}={v}' for k, v in self.params.items()]
-        )}")
-        try:
-            result = self.callable(**self.params)
-            return result
-        except Exception as err:
-            raise ParseError(f"API call failed: {err}") from err
+    def give(self):
+        """Return the API call result."""
+        if isinstance(self.resource, Callable):
+            return self.resource(**self.params)
+        else:
+            return self.resource
 
 
 class Parser:
@@ -77,21 +76,56 @@ class Parser:
         """Get the current resource path."""
         return " ".join(self.consumed)
 
-    def parse(self) -> APICall:
+    def help(self) -> None:
+        """Display help information."""
+        with open(os.path.join(HELP_DIR, HELP_FILE), 'r') as f:
+            print(f.read())
+
+    def version(self) -> None:
+        """Display version information."""
+        print(f"Campus CLI version {__version__}")
+        print(f"Campus API version {client.version}")
+
+    def parse(self) -> APICall | None:
         """Parse the command line arguments."""
         program = self.consume()
         if program != "campus":
             warn(f"Unexpected programe name: {program}", UserWarning, 2)
-        resource = client
+        resource: CampusClient = client
         params = {}
         while not self.atEnd():
             arg = self.consume()
+            if self.pos == 1:
+                # Special handling for `help` and `version`
+                if arg == 'help':
+                    self.help()
+                elif arg == 'version':
+                    self.version()
+                return None
             # TODO: Pattern-match tokens
             # - resource name
+            if pattern.is_resource_name(arg):
+                # Check if the resource is valid
+                if not hasattr(resource, arg):
+                    raise ParseError(f"Unknown resource: {arg}")
+                resource: CampusResource = getattr(resource, arg)
             # - campus_id
+            elif pattern.is_campus_id(arg):
+                # Check if the resource has a method for this campus ID
+                if not hasattr(resource, "__getitem__"):
+                    raise ParseError(f"Unexpected campus ID: {arg}")
+                resource = resource[arg]
             # - verb
+            elif pattern.is_campus_verb(arg):
+                # Check if the resource has a method for this verb
+                if not hasattr(resource, arg):
+                    raise ParseError(f"Unexpected verb: {arg}")
+                resource = getattr(resource, arg)
             # - params
-            # - additional commands (e.g. help)
+            elif pattern.is_param_pair(arg):
+                key, value = arg.split("=")
+                # TODO: value conversion
+                params[key] = value
             try:
                 resource = getattr(resource, arg)
             except AttributeError as err:
@@ -101,7 +135,9 @@ class Parser:
 
 if __name__ == "__main__":
     parser = Parser(sys.argv)
-    apicall = parser.parse()
-    result = apicall()
-    # TODO: Format result
-    print(result)
+    apiresult = parser.parse()
+    if apiresult:
+        result = apiresult.give()
+        # TODO: Format result
+        print(result)
+    sys.exit(0)
