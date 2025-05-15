@@ -13,6 +13,10 @@ from campus.api.users import Users
 
 
 class CampusClient(CampusAPI):
+    """The Campus API client.
+    
+    This class is the root of API calls.
+    """
     clients: Clients
     users: Users
 
