@@ -13,6 +13,8 @@ from campus.cli import pattern
 
 logging.basicConfig(level=logging.INFO)
 
+__version__ = "0.1.0"
+
 HELP_DIR = os.path.dirname(__file__)
 HELP_FILE = "README.md"
 SEP = " "
@@ -34,7 +36,7 @@ class APICall:
 
     def __init__(
             self,
-            resource: Callable | dict,
+            resource,
             params: Mapping,
             *,
             path: list[str],
@@ -46,8 +48,9 @@ class APICall:
         """Return the API call result."""
         if isinstance(self.resource, Callable):
             return self.resource(**self.params)
-        else:
+        elif isinstance(self.resource, dict):
             return self.resource
+        raise TypeError(f"{self.resource}: Resource is not callable or dict.")
 
 
 class Parser:
@@ -91,7 +94,7 @@ class Parser:
         program = self.consume()
         if program != "campus":
             warn(f"Unexpected programe name: {program}", UserWarning, 2)
-        resource: CampusClient = client
+        resource = client  # type: ignore
         params = {}
         while not self.atEnd():
             arg = self.consume()
@@ -114,7 +117,7 @@ class Parser:
                 # Check if the resource has a method for this campus ID
                 if not hasattr(resource, "__getitem__"):
                     raise ParseError(f"Unexpected campus ID: {arg}")
-                resource = resource[arg]
+                resource = resource[arg]  # type: ignore
             # - verb
             elif pattern.is_campus_verb(arg):
                 # Check if the resource has a method for this verb
