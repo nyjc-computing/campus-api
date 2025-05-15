@@ -58,8 +58,11 @@ class Parser:
 
     def __init__(self, args: Sequence[str]):
         self.args = args
+        # Number of arguments
         self.arglen = len(args)
+        # Index of next argument to consume
         self.pos = 0
+        # List of consumed arguments
         self.consumed = []
 
     def atEnd(self) -> bool:
