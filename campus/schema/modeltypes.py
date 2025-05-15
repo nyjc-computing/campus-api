@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Mapping
 
 from openapi.schema.datatypes import format_keyvalues
 
@@ -28,8 +28,11 @@ class CampusModel(dict[str, Validatable]):
     __request_only__: tuple[str] = ()
     # Response-only properties are not specified in requests, but returned in responses
     __response_only__: tuple[str] = ()
+    # Required properties are required in requests
+    __required__: tuple[str] = ()
     # Models must declare all properties as class variables.
     # Properties must use the Validatable type.
+    validators: dict[str, type[Validatable]]
 
     def __init_subclass__(cls, **kwargs):
         """__init_subclass__ is called when a subclass is created, not when an
@@ -39,7 +42,9 @@ class CampusModel(dict[str, Validatable]):
         class variable.
         """
         cls.validators = {}
-        for field, typecls in cls.validators.items():
+        for field, typecls in cls.__annotations__.items():
+            if field == "validators" or field.startswith("__"):
+                continue
             if not isinstance(typecls, Validatable):
                 raise TypeError(f"Field {field} must be of type Validatable")
             if field in cls.__hidden__ and field in cls.__request_only__:
@@ -49,6 +54,14 @@ class CampusModel(dict[str, Validatable]):
             if field in cls.__hidden__ and field in cls.__response_only__:
                 raise TypeError(
                     f"Field {field} cannot be both hidden and response-only"
+                )
+            if field in cls.__required__ and field in cls.__response_only__:
+                raise TypeError(
+                    f"Field {field} cannot be both required and response-only"
+                )
+            if field in cls.__required__ and field in cls.__hidden__:
+                raise TypeError(
+                    f"Field {field} cannot be both required and hidden"
                 )
             cls.validators[field] = typecls
 
@@ -105,6 +118,25 @@ class CampusModel(dict[str, Validatable]):
             for field, value in self.items()
             if not (field in self.__hidden__ or field in self.__request_only__)
         }
+    
+    @classmethod
+    def validate_request(cls, request: Mapping[str, Any]) -> None:
+        """Validate a request to the model.
+
+        This method is used to validate a request to the model.
+        """
+        required_fields = list(cls.__required__)
+        for field, value in request.items():
+            if field not in cls.validators:
+                raise KeyError(f"Invalid field: {field}")
+            if field in cls.__hidden__:
+                raise KeyError(f"Field {field} is hidden")
+            if field in cls.__response_only__:
+                raise KeyError(f"Field {field} is response-only")
+            required_fields.remove(field)
+            cls.validators[field].validate(value)
+        if required_fields:
+            raise KeyError(f"Required fields are missing: {required_fields}")
 
 
 class User(CampusModel):
