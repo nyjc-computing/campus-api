@@ -5,7 +5,7 @@ Represents operations on the users resource in Campus.
 
 from campus.schema.datatypes import UserID, Validatable
 from campus.schema.modeltypes import User as UserModel
-from campus.wrapper.base import SingleResource, ResourceCollection
+from campus.api.base import SingleResource, ResourceCollection
 
 from . import http
 

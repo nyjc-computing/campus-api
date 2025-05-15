@@ -7,9 +7,9 @@ Campus resources are represented through the CampusClient class, with
 each resource represented as an attribute.
 """
 
-from campus.wrapper.base import CampusAPI
-from campus.wrapper.clients import Clients
-from campus.wrapper.users import Users
+from campus.api.base import CampusAPI
+from campus.api.clients import Clients
+from campus.api.users import Users
 
 
 class CampusClient(CampusAPI):

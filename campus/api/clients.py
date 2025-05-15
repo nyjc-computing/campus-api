@@ -5,7 +5,7 @@ Represents operations on the clients resource in Campus.
 
 from campus.schema.datatypes import ClientID, Validatable
 from campus.schema.modeltypes import Client as ClientModel
-from campus.wrapper.base import SingleResource, ResourceCollection
+from campus.api.base import SingleResource, ResourceCollection
 
 from . import http
 

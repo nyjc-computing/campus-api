@@ -7,7 +7,7 @@ represented as attribute, ids represented as dictionary keys, and operations
 represented as methods.
 """
 
-from campus.wrapper.api import CampusClient
+from campus.api.api import CampusClient
 
 __all__ = [
     "CampusClient",
