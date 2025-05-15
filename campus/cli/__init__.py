@@ -92,19 +92,19 @@ class Parser:
     def parse(self) -> APICall | None:
         """Parse the command line arguments."""
         program = self.consume()
-        if program != "campus":
-            warn(f"Unexpected programe name: {program}", UserWarning, 2)
+        # if program != "campus":
+        #     warn(f"Unexpected programe name: {program}", UserWarning, 2)
         resource = client  # type: ignore
         params = {}
         while not self.atEnd():
             arg = self.consume()
-            if self.pos == 1:
+            # 1st argument is program name, 2nd argument is arg
+            if self.pos == 2:
                 # Special handling for `help` and `version`
                 if arg == 'help':
                     self.help()
                 elif arg == 'version':
                     self.version()
-                return None
 
             if pattern.is_resource_name(arg):
                 # Check if the resource exists
