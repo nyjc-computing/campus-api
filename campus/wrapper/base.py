@@ -74,6 +74,16 @@ class CampusResource(Pathable):
 
     def __init__(self, parent: "CampusAPI | CampusResource"):
         self.parent = parent
+    
+    @property
+    def root(self) -> CampusAPI:
+        """Get the root of the resource tree.
+
+        This method is used to get the root of the resource tree.
+        """
+        if isinstance(self.parent, CampusAPI):
+            return self.parent
+        return self.parent.root
 
     def __repr__(self):
         return f"<{self.__class__.__name__}>"
@@ -83,7 +93,7 @@ class CampusResource(Pathable):
 
         This method is used to build a path for the resource.
         """
-        return "/".join([self.parent.build_path, *args])
+        return "/".join([self.parent.build_path(), *args])
 
 
 class SingleResource(CampusResource):
