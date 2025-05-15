@@ -93,27 +93,33 @@ class BasicSchema(Schema):
 
 
 class FormatSchema(Schema):
-    """Base class for schemas with format."""
+    """Base class for schemas with (optional) format."""
     type: BasicType
-    format: str
+    format: str | None = None
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}{format_keyvalues(self.to_json())}"
 
     def to_json(self) -> dict:
-        return {"type": self.type, "format": self.format}
+        json_ = {"type": self.type}
+        if self.format is not None:
+            json_["format"] = self.format
+        return json_
 
 
 class String(FormatSchema):
     type: BasicType = "string"
     format: str | None = None
     pattern: str | None = None
+    enum: list[Schema | SchemaReference] | None = None
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}{format_keyvalues(self.to_json())}"
 
     def to_json(self) -> dict:
         result = super().to_json()
+        if self.enum is not None:
+            result["enum"] = [enum.to_json() for enum in self.enum]
         if self.pattern is not None:
             result["pattern"] = self.pattern
         return result
@@ -122,11 +128,25 @@ class String(FormatSchema):
 class Number(FormatSchema):
     type: BasicType = "number"
     format: str | None = None
+    enum: list[float | int] | None = None
+
+    def to_json(self) -> dict:
+        result = super().to_json()
+        if self.enum is not None:
+            result["enum"] = [enum.to_json() for enum in self.enum]
+        return result
 
 
 class Integer(BasicSchema):
     type: BasicType = "integer"
     format: str | None = None
+    enum: list[int] | None = None
+
+    def to_json(self) -> dict:
+        result = super().to_json()
+        if self.enum is not None:
+            result["enum"] = [enum.to_json() for enum in self.enum]
+        return result
 
 
 class Boolean(BasicSchema):
