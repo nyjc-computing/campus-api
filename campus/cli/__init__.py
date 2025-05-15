@@ -105,26 +105,25 @@ class Parser:
                 elif arg == 'version':
                     self.version()
                 return None
-            # TODO: Pattern-match tokens
-            # - resource name
+
             if pattern.is_resource_name(arg):
-                # Check if the resource is valid
+                # Check if the resource exists
                 if not hasattr(resource, arg):
                     raise ParseError(f"Unknown resource: {arg}")
                 resource: CampusResource = getattr(resource, arg)
-            # - campus_id
+
             elif pattern.is_campus_id(arg):
-                # Check if the resource has a method for this campus ID
+                # Check if resource supports [] operation
                 if not hasattr(resource, "__getitem__"):
                     raise ParseError(f"Unexpected campus ID: {arg}")
                 resource = resource[arg]  # type: ignore
-            # - verb
+
             elif pattern.is_campus_verb(arg):
                 # Check if the resource has a method for this verb
                 if not hasattr(resource, arg):
                     raise ParseError(f"Unexpected verb: {arg}")
                 resource = getattr(resource, arg)
-            # - params
+
             elif pattern.is_param_pair(arg):
                 key, value = arg.split("=")
                 # TODO: value conversion
