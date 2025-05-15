@@ -12,7 +12,7 @@ class CommandExecutor:
 
         # Example: Handle 'clients' resource
         if resource_chain[0] == "clients":
-            from resources.clients import ClientsResource
+            from operations.clients import ClientsResource
             resource = ClientsResource()
             result = resource.handle(action, {'id': resource_id, 'args': args})
             print(result)
