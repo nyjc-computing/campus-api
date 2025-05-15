@@ -3,7 +3,7 @@
 Classes for representing References
 """
 
-from typing import Mapping, Protocol
+from typing import Protocol
 
 RefPattern = str
 
