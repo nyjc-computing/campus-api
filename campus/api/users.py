@@ -47,10 +47,10 @@ class Users(ResourceCollection):
         UserID.validate(user_id)
         return User(self, UserID(user_id))
 
-    def new(self, **kwargs: Validatable) -> User:
+    def new(self, **kwargs: Validatable) -> UserModel:
         """.users.new(...)"""
         user = UserModel(**kwargs)
         api_path = self.build_path()
         http.post(api_path, data=user.as_json())
-        return User(self, user.id)
+        return user
 
