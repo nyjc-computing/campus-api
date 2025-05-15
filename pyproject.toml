@@ -1,5 +1,5 @@
 [project]
-name = "campus-api-python"
+name = "campus"
 version = "0.1.0"
 description = "Python client for Campus"
 authors = [

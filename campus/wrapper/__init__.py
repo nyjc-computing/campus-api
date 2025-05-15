@@ -1,6 +1,6 @@
-"""campus/operations
+"""campus/wrapper
 
-Represents operations on Campus resources.
+A Campus Web API wrapper for Python.
 
 The API for operations follows the Campus API specification, with resources
 represented as attribute, ids represented as dictionary keys, and operations
