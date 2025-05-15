@@ -4,7 +4,7 @@ Campus data types, designed for OpenAPI compatibility.
 The data types are based on native Python types as far as possible,
 and will be used to generate OpenAPI schemas for the campus API.
 """
-from datetime import date, datetime, time
+from datetime import datetime
 import re
 from typing import Any, Literal, Protocol, runtime_checkable
 
@@ -111,12 +111,12 @@ class Base64String(StringPattern):
 
 class UserID(StringPattern):
     """User IDs are the username part of the email address, for simplicity."""
-    pattern = fr'^{UserIDPattern}$'
+    pattern = re.compile(fr'^{UserIDPattern}$')
 
 
 class Domain(StringPattern):
     """Domain names are the domain part of the email address."""
-    pattern = fr'^{DomainPattern}$'
+    pattern = re.compile(fr'^{DomainPattern}$')
 
 
 class EmailAddress(StringPattern):
@@ -152,7 +152,7 @@ class CampusID(UID):
 
     Example: uid-client-12345678
     """
-    pattern = fr"^{UidPrefix}-({CampusLabelPattern})-({Uid8Pattern})$"
+    pattern = re.compile(fr"^{UidPrefix}-({CampusLabelPattern})-({Uid8Pattern})$")
 
     def __new__(cls, value):
         if not (match := cls.pattern.match(value)):
@@ -174,7 +174,7 @@ class ClientID(CampusID):
 
     Example: uid-client-12345678
     """
-    pattern = fr"^{UidPrefix}-client-{Uid8Pattern}$"
+    pattern = re.compile(fr"^{UidPrefix}-client-{Uid8Pattern}$")
     label: Literal["client"]
 
 
@@ -186,7 +186,7 @@ class CircleID(CampusID):
 
     Example: uid-circle-12345678
     """
-    pattern = fr"^{UidPrefix}-circle-{Uid8Pattern}$"
+    pattern = re.compile(fr"^{UidPrefix}-circle-{Uid8Pattern}$")
     label: Literal["circle"]
 
 
@@ -204,7 +204,7 @@ class OTP(StringPattern):
 
     Example: 123456
     """
-    pattern = fr"^{DecimalChar}{{6}}$"
+    pattern = re.compile(fr"^{DecimalChar}{{6}}$")
 
 
 class Date(StringPattern):
@@ -214,7 +214,7 @@ class Date(StringPattern):
 
     This class mimics the datetime.date class, and provides a date property
     """
-    pattern = fr"^{DatePattern}$"
+    pattern = re.compile(fr"^{DatePattern}$")
 
     def __new__(cls, value):
         string = super().__new__(cls, value)
