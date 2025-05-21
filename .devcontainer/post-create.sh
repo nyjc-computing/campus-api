@@ -5,7 +5,7 @@ git config pull.ff true
 
 # Install Poetry and project dependencies
 pip install poetry
-poetry install --no-root  # don't install campus package
+poetry install
 
 # Install poetry-shell plugin
 poetry self add poetry-plugin-shell
