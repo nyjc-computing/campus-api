@@ -4,7 +4,7 @@ Data types as defined in the OpenAPI 3.0 Specification.
 https://swagger.io/docs/specification/v3_0/data-models/data-types/
 """
 from abc import ABC, abstractmethod
-from typing import Any, Literal, Mapping
+from typing import Any, Final, Literal, Mapping
 
 from .reference import SchemaReference
 
@@ -92,7 +92,7 @@ class BasicSchema(Schema):
 class FormatSchema(Schema):
     """Base class for schemas with (optional) format."""
     type: BasicType
-    format: str | None = None
+    format: str
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}{format_keyvalues(self.to_json())}"
@@ -106,7 +106,6 @@ class FormatSchema(Schema):
 
 class String(FormatSchema):
     type: BasicType = "string"
-    format: str | None = None
     pattern: str | None = None
     enum: list[Schema | SchemaReference] | None = None
 
@@ -124,13 +123,12 @@ class String(FormatSchema):
 
 class Number(FormatSchema):
     type: BasicType = "number"
-    format: str | None = None
     enum: list[float | int] | None = None
 
     def to_json(self) -> dict:
         result = super().to_json()
         if self.enum is not None:
-            result["enum"] = [enum.to_json() for enum in self.enum]
+            result["enum"] = self.enum.copy()
         return result
 
 
@@ -142,7 +140,7 @@ class Integer(BasicSchema):
     def to_json(self) -> dict:
         result = super().to_json()
         if self.enum is not None:
-            result["enum"] = [enum.to_json() for enum in self.enum]
+            result["enum"] = self.enum.copy()
         return result
 
 
@@ -208,16 +206,24 @@ class Object(Schema):
     ):
         self.properties = properties
         self.required = required
-        self.readOnly: dict[str, bool] = {}
-        for prop in readOnly:
-            if prop not in properties:
-                raise ValueError(f"Property {prop!r} not defined in properties")
-            self.readOnly[prop] = True
-        self.writeOnly: dict[str, bool] = {}
-        for prop in writeOnly:
-            if prop not in properties:
-                raise ValueError(f"Property {prop!r} not defined in properties")
-            self.writeOnly[prop] = True
+        if readOnly is None:
+            self.readOnly = {}
+        else:
+            missing = set(readOnly) - set(properties)
+            if missing:
+                raise ValueError(
+                    f"Properties {missing!r} not defined in properties"
+                )
+            self.readOnly = {prop: True for prop in readOnly}
+        if writeOnly is None:
+            self.writeOnly = {}
+        else:
+            missing = set(writeOnly) - set(properties)
+            if missing:
+                raise ValueError(
+                    f"Properties {missing!r} not defined in properties"
+                )
+            self.writeOnly = {prop: True for prop in writeOnly}
         self.additionalProperties = additionalProperties
         self.minProperties = minProperties
         self.maxProperties = maxProperties
