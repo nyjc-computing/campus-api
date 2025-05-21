@@ -6,10 +6,9 @@ https://swagger.io/docs/specification/v3_0/data-models/data-types/
 from abc import ABC, abstractmethod
 from typing import Any, Final, Literal, Mapping
 
-from .reference import SchemaReference
-
 Mimetype = str
 Content = Mapping[Mimetype, "Schema"]
+RefPattern = str
 
 BasicType = Literal[
     "string",
@@ -54,10 +53,10 @@ def format_keyvalues(
         A string representation of the key-value pairs.
     """
     return (
-        f"{start}{separator.join(
+        f"""{start}{separator.join(
             f'{key}{delimiter}{value!r}'
             for key, value in keyvalues.items()
-        )}{end}"
+        )}{end}"""
     )
 
 
@@ -87,6 +86,29 @@ class BasicSchema(Schema):
 
     def to_json(self) -> dict:
         return {"type": self.type}
+    
+
+class Reference(Schema):
+    """Represents a reference as defined in OpenAPI 3.0.
+
+    https://swagger.io/docs/specification/v3_0/using-ref/
+    """
+    ref: RefPattern
+
+    def __init__(self, ref: RefPattern):
+        # TODO: Validate RefPattern
+        self.ref = ref
+
+    def to_json(self) -> dict:
+        return {"$ref": self.ref}
+
+
+class PathReference(Reference):
+    """A reference to a Path entry in Component."""
+
+
+class SchemaReference(Reference):
+    """A reference to a Schema entry in Component."""
 
 
 class FormatSchema(Schema):
