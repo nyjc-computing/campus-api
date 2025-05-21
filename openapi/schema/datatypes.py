@@ -55,7 +55,7 @@ def format_keyvalues(
     """
     return (
         f"{start}{separator.join(
-            f"{key}{delimiter}{value!r}"
+            f'{key}{delimiter}{value!r}'
             for key, value in keyvalues.items()
         )}{end}"
     )
@@ -86,10 +86,7 @@ class BasicSchema(Schema):
         return f"{self.__class__.__name__}{format_keyvalues(self.to_json())}"
 
     def to_json(self) -> dict:
-        if hasattr(self, "format") and self.format is not None:
-            return {"type": self.type, "format": self.format}
-        else:
-            return {"type": self.type}
+        return {"type": self.type}
 
 
 class FormatSchema(Schema):
