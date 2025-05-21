@@ -11,6 +11,8 @@ so None is used to represent an unused property.
 from .components import Components
 from .datatypes import (
     Schema,
+    PathReference,
+    SchemaReference,
     String,
     Number,
     Integer,
@@ -44,10 +46,6 @@ from .paths import (
     ConnectOperation,
     Parameter,
     Path,
-)
-from .reference import (
-    PathReference,
-    SchemaReference,
 )
 from .request import RequestBody
 from .response import Response
