@@ -13,15 +13,15 @@ from . import http
 class User(SingleResource):
     """Represents operations on a single user resource in Campus."""
 
-    def activate(self) -> None:
-        """.users[{user_id}].activate()"""
-        api_path = self.build_path('activate')
-        http.post(api_path)
+    # def activate(self) -> http.JsonSerializable:
+    #     """.users[{user_id}].activate()"""
+    #     api_path = self.build_path('activate')
+    #     return http.post(api_path)
     
-    def delete(self) -> None:
+    def delete(self) -> http.JsonSerializable:
         """.users[{user_id}].delete()"""
         api_path = self.build_path()
-        http.delete(api_path)
+        return http.delete(api_path)
 
     def get(self) -> UserModel | None:
         """.users[{user_id}].get()"""
@@ -32,11 +32,11 @@ class User(SingleResource):
         else:
             return UserModel(**resp_json)
 
-    def update(self, **kwargs: Validatable) -> None:
+    def update(self, **kwargs: Validatable) -> http.JsonSerializable:
         """.users[{user_id}].update(...)"""
         User.validate_request(kwargs)
         api_path = self.build_path()
-        http.put(api_path, data=kwargs)
+        return http.put(api_path, data=kwargs)
 
     
 class Users(ResourceCollection):
