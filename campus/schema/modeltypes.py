@@ -150,6 +150,7 @@ class User(CampusModel):
     """
     __response_only__ = ("id", "activated_at")
     id: UserID
+    name: str
     email: EmailAddress
     activated_at: Datetime
 
@@ -166,3 +167,55 @@ class Client(CampusModel):
     description: String
     created_at: Datetime
     secret_hash: Base64String
+
+
+class Circle(CampusModel):
+    """Campus circle model.
+
+    This model is used to represent a circle in the campus system.
+    """
+    __response_only__ = ("id", "created_at", "members", "sources")
+    __required__ = ("id", "name", "tag", "created_at")
+    id: CampusID
+    name: CampusLabel
+    description: String
+    tag: String
+    members: dict[CampusID, int]
+    created_at: Datetime
+    sources: dict  # SourceID, SourceHeader
+
+
+class CircleNew(CampusModel):
+    """Request schema for creating a new circle."""
+    __required__ = ("name", "tag")
+    name: CampusLabel
+    description: String
+    tag: String
+    parents: dict[String, int]  # CirclePath to AccessValue
+
+
+class CircleUpdate(CampusModel):
+    """Request schema for updating a circle."""
+    __required__ = ()
+    name: CampusLabel
+    description: String
+
+
+class CircleMemberAdd(CampusModel):
+    """Request schema for adding a member to a circle."""
+    __required__ = ("member_id", "access_value")
+    member_id: CampusID
+    access_value: int
+
+
+class CircleMemberRemove(CampusModel):
+    """Request schema for removing a member from a circle."""
+    __required__ = ("member_id",)
+    member_id: CampusID
+
+
+class CircleMemberSet(CampusModel):
+    """Request schema for setting a member's access in a circle."""
+    __required__ = ("member_id", "access_value")
+    member_id: CampusID
+    access_value: int
